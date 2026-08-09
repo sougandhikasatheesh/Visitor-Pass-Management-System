@@ -1,5 +1,6 @@
 import { QRCodeCanvas } from "qrcode.react";
 import jsPDF from "jspdf";
+import {saveAs} from "file-saver";
 import {useEffect,useState} from "react";
 import Navbar from "../components/Navbar";
 import api from "../services/api";
@@ -17,6 +18,7 @@ function Visitors(){
     const [selectedVisitor, setSelectedVisitor] = useState(null);
     const [search, setSearch] = useState("");
     const [filterStatus, setFilterStatus] = useState("All");
+    const [photo, setPhoto] = useState(null);
     const user=JSON.parse(localStorage.getItem("user"));
     const fetchVisitors=async()=>{
         try{
@@ -36,23 +38,30 @@ function Visitors(){
 
     try {
 
-        await api.post(
-            "/visitor",
-            {
-                visitorName,
-                email,
-                phone,
-                purpose,
-                personToMeet,
-                visitDate,
-                status
-            },
-            {
-                headers: {
-                    Authorization: `Bearer ${user.token}`
-                }
+        const formData = new FormData();
+
+            formData.append("visitorName", visitorName);
+            formData.append("email", email);
+            formData.append("phone", phone);
+            formData.append("purpose", purpose);
+            formData.append("personToMeet", personToMeet);
+            formData.append("visitDate", visitDate);
+            formData.append("status", status);
+
+            if (photo) {
+                formData.append("photo", photo);
             }
-        );
+
+            await api.post(
+                "/visitor",
+                formData,
+                {
+                    headers: {
+                        Authorization: `Bearer ${user.token}`,
+                        "Content-Type": "multipart/form-data"
+                    }
+                }
+            );
 
         setVisitorName("");
         setEmail("");
@@ -61,7 +70,7 @@ function Visitors(){
         setPersonToMeet("");
         setVisitDate("");
         setStatus("Pending");
-
+        setPhoto(null);
         fetchVisitors();
 
     } catch (error) {
@@ -202,6 +211,37 @@ const updateVisitorStatus = async (visitor) => {
     }
 };
 
+//file export
+
+const exportCSV=()=>{
+    const headers=[
+        "Visitor Name",
+        "Email",
+        "Phone",
+        "Purpose",
+        "Person To Meet",
+        "Visit Date",
+        "Status"
+    ];
+    const rows=visitors.map((visitor)=>[
+        visitor.visitorName,
+        visitor.email,
+        visitor.phone,
+        visitor.purpose,
+        visitor.personToMeet,
+        new Date(visitor.visitDate).toLocaleDateString(),
+        visitor.status
+    ]);
+    const csvContent=[
+        headers.join(","),
+        ...rows.map((row)=> row.join(","))
+    ].join("\n");
+    const blob=new Blob([csvContent],{
+        type:"text/csv;charset=utf-8;"
+    });
+    saveAs(blob,"Visitors_Report.csv");
+}
+
     return (
         <>
         <Navbar />
@@ -269,6 +309,14 @@ const updateVisitorStatus = async (visitor) => {
         required
     />
 </div>
+        <div className="col-md-3">
+    <input
+        type="file"
+        className="form-control"
+        accept="image/*"
+        onChange={(e) => setPhoto(e.target.files[0])}
+    />
+</div>
 
         <div className="col-md-2">
             <button
@@ -304,10 +352,19 @@ const updateVisitorStatus = async (visitor) => {
             </select>
     </div>
 </div>
+
+<div className="d-flex justify-content-end mb-3">
+    <button className="btn btn-succes" onClick={exportCSV}>
+        Export file
+    </button>
+
+</div>
+
             <table className="table table-bordered table-striped mt-3">
                 <thead>
                     <tr>
                         <th>Visitor Name</th>
+                        <th>Photo</th>
                         <th>Email</th>
                         <th>Phone</th>
                         <th>Purpose</th>
@@ -336,6 +393,22 @@ const updateVisitorStatus = async (visitor) => {
                         .map((visitor)=>(
                         <tr key={visitor._id}>
                             <td>{visitor.visitorName}</td>
+                            <td>
+                                {visitor.photo ? (
+                                    <img
+                                        src={`http://localhost:4000/uploads/${visitor.photo}`}
+                                        alt="Visitor"
+                                        width="60"
+                                        height="60"
+                                        style={{
+                                            objectFit: "cover",
+                                            borderRadius: "50%"
+                                        }}
+                                    />
+                                ) : (
+                                    "No Photo"
+                                )}
+                            </td>
                                 <td>{visitor.email}</td>
                                 <td>{visitor.phone}</td>
                                 <td>{visitor.purpose}</td>
@@ -345,19 +418,23 @@ const updateVisitorStatus = async (visitor) => {
                                 
                                 <td>{visitor.status}</td>
                                 <td>
-                                <button
+                                    {(user.role === "Admin" || user.role === "Employee") && (
+                                    <button
                                         className="btn btn-warning btn-sm me-2"
                                         onClick={() => editVisitor(visitor)}
                                     >
                                         Edit
                                     </button>
+                                )}
                                 
+                                {user.role === "Admin" && (
                                 <button
                                     className="btn btn-danger btn-sm"
                                     onClick={() => deleteVisitor(visitor._id)}
                                 >
                                     Delete
                                 </button>
+                            )}
                                 <button
                                     className="btn btn-success btn-sm"
                                     onClick={() => setSelectedVisitor(visitor)}

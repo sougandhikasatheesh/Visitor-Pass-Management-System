@@ -1,8 +1,14 @@
-import {Link} from "react-router-dom";
+import {Link,useNavigate} from "react-router-dom";
 import useLogout from "../hooks/useLogout";
 
 function Navbar(){
-    const {logout}=useLogout();
+    const navigate = useNavigate();
+    const { logout } = useLogout();
+
+    const handleLogout = () => {
+        logout();
+        navigate("/");
+    };
     return (
         <nav className="navbar navbar-expand -lg navbar-dark bg-dark">
             <div className="container">
@@ -13,7 +19,7 @@ function Navbar(){
                     Visitors</Link>
                     <Link className="btn btn-outline-light me-2" to="/appointments">
                     Appointments</Link>
-                    <button className="btn btn-danger" onClick={logout}>Logout</button>
+                    <button className="btn btn-danger" onClick={handleLogout}>Logout</button>
                 </div>
 
             </div>

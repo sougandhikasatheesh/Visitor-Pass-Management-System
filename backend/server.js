@@ -1,8 +1,10 @@
 
+const path = require("path");
+require ("dotenv").config();
 const visitorRoutes = require("./routes/visitorRoutes");
 const appointmentRoutes = require("./routes/appointmentRoutes");
 
-require ("dotenv").config();
+
 
 const express = require("express");
 const cors = require("cors");
@@ -15,6 +17,7 @@ connectDB();
 // Middleware
 app.use(cors());
 app.use(express.json());
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use("/api/user",userRoutes);
 app.use("/api/visitor", visitorRoutes);
 app.use("/api/appointment", appointmentRoutes);

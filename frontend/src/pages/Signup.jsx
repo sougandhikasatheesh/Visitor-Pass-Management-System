@@ -1,6 +1,8 @@
 import {useState} from "react";
 import {Link} from "react-router-dom";
 import useSignup from "../hooks/useSignup";
+import { useNavigate } from "react-router-dom";
+
 
 
 
@@ -11,11 +13,17 @@ function Signup() {
     const [password, setPassword] = useState("");
     const [role, setRole] = useState("Visitor");
     const { signup, error, isLoading } = useSignup();
+    const navigate = useNavigate();
 
-    const handleSubmit = async (e)=>{
-        e.preventDefault();
-        await signup(name,email,password,role);
-    };
+    const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    await signup(name, email, password, role);
+
+    if (!error) {
+        navigate("/");
+    }
+};
     return (
         <div className="container mt-5">
             <h2 className="mb-4 text-center">

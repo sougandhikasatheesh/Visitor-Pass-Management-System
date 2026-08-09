@@ -25,6 +25,10 @@ const visitorSchema=new mongoose.Schema(
         type:Date,
         required:true
     },
+    photo: {
+    type: String,
+    default: ""
+    },
     status:{
         type:String,
         enum:['Pending','Approved','Rejected','Checked In','Checked Out'],

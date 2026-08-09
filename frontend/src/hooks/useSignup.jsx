@@ -8,7 +8,7 @@ const useSignup = ()=> {
 
     const {dispatch}=useContext(AuthContext);
     const signup=async(name,email,password,role) =>{
-        setIsloading(true);
+        setIsLoading(true);
         setError(null);
         try{
             const response=await api.post("/user/signup",{
