@@ -378,85 +378,78 @@ const exportCSV=()=>{
                     {visitors.
                         filter((visitor) => {
 
-        const matchesSearch =
-            visitor.visitorName
-                .toLowerCase()
-                .includes(search.toLowerCase());
+                    const matchesSearch =
+                        visitor.visitorName
+                            .toLowerCase()
+                            .includes(search.toLowerCase());
 
-        const matchesStatus =
-            filterStatus === "All" ||
-            visitor.status === filterStatus;
+                    const matchesStatus =
+                        filterStatus === "All" ||
+                        visitor.status === filterStatus;
 
-        return matchesSearch && matchesStatus;
+                    return matchesSearch && matchesStatus;
 
-    })
-                        .map((visitor)=>(
-                        <tr key={visitor._id}>
-                            <td>{visitor.visitorName}</td>
-                            <td>
-                                {visitor.photo ? (
-                                    <img
-                                        src={`http://localhost:4000/uploads/${visitor.photo}`}
-                                        alt="Visitor"
-                                        width="60"
-                                        height="60"
-                                        style={{
-                                            objectFit: "cover",
-                                            borderRadius: "50%"
-                                        }}
-                                    />
-                                ) : (
-                                    "No Photo"
-                                )}
-                            </td>
-                                <td>{visitor.email}</td>
-                                <td>{visitor.phone}</td>
-                                <td>{visitor.purpose}</td>
-                                <td>{visitor.personToMeet}</td>
-                                <td>{new Date(visitor.visitDate).toLocaleDateString()}</td>
-                                
-                                
-                                <td>{visitor.status}</td>
-                                <td>
-                                    {(user.role === "Admin" || user.role === "Employee") && (
-                                    <button
-                                        className="btn btn-warning btn-sm me-2"
-                                        onClick={() => editVisitor(visitor)}
-                                    >
-                                        Edit
-                                    </button>
-                                )}
-                                
-                                {user.role === "Admin" && (
-                                <button
-                                    className="btn btn-danger btn-sm"
-                                    onClick={() => deleteVisitor(visitor._id)}
-                                >
-                                    Delete
-                                </button>
+                })
+        .map((visitor)=>(
+            <tr key={visitor._id}>
+                <td>{visitor.visitorName}</td>
+                    <td>
+                        {visitor.photo ? (
+                            <img
+                                src={`http://localhost:4000/uploads/${visitor.photo}`}
+                                alt="Visitor"
+                                width="60"
+                                height="60"
+                                style={{
+                                    objectFit: "cover",
+                                    borderRadius: "50%"
+                                }}
+                            />
+                            ) : (
+                                "No Photo"
                             )}
-                                <button
-                                    className="btn btn-success btn-sm"
-                                    onClick={() => setSelectedVisitor(visitor)}
-                                >
-                                    QR
-                                </button>
-                                <button
-                        className="btn btn-info btn-sm me-2"
-                        onClick={() => updateVisitorStatus(visitor)}
-                    >
-                        {visitor.status === "Checked In"
-                            ? "Check Out"
-                            : visitor.status === "Checked Out"
-                            ? "Completed"
-                            : "Check In"}
-                    </button>
-                            </td>
+                    </td>
+                    <td>{visitor.email}</td>
+                    <td>{visitor.phone}</td>
+                    <td>{visitor.purpose}</td>
+                    <td>{visitor.personToMeet}</td>
+                    <td>{new Date(visitor.visitDate).toLocaleDateString()}</td>
+                                
+                                
+                    <td>{visitor.status}</td>
+                    <td>
+                        {(user.role === "Admin" || user.role === "Employee") && (
+                        <button
+                            className="btn btn-warning btn-sm me-2"
+                            onClick={() => editVisitor(visitor)}>
+                            Edit
+                        </button>
+                        )}
+                                
+                        {user.role === "Admin" && (
+                        <button
+                            className="btn btn-danger btn-sm"
+                            onClick={() => deleteVisitor(visitor._id)}>
+                            Delete
+                        </button>
+                        )}
+                        <button
+                            className="btn btn-success btn-sm"
+                            onClick={() => setSelectedVisitor(visitor)}>
+                            QR
+                        </button>
+                        <button
+                            className="btn btn-info btn-sm me-2"
+                            onClick={() => updateVisitorStatus(visitor)}>
+                            {visitor.status === "Checked In"? "Check Out": visitor.status === "Checked Out"? "Completed": "Check In"}
+                    `   </button>
+                         </td>
                         </tr>
                     ))}
                 </tbody>
             </table>
         </div>
+        {/* //qr code */}
         {selectedVisitor && (
     <div
         className="modal d-block"
@@ -478,12 +471,10 @@ const exportCSV=()=>{
                 <div className="modal-body text-center">
 
                     <QRCodeCanvas
-                        value={JSON.stringify(selectedVisitor)}
+                        value={`VISITOR:${selectedVisitor._id}`}
                         size={220}
                     />
-
                     <hr />
-
                     <h5>{selectedVisitor.visitorName}</h5>
 
                     <p>Email: {selectedVisitor.email}</p>
@@ -509,7 +500,7 @@ const exportCSV=()=>{
         </div>
     </div>
 )}
-        </>
-    );
+    </>
+);
 }
 export default Visitors;

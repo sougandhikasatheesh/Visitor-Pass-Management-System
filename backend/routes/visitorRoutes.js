@@ -2,7 +2,7 @@ const requireRole = require("../middleware/requireRole");
 const upload = require("../config/multer");
 const express=require("express");
 const requireAuth=require("../middleware/requireAuth");
-const {createVisitor,getVisitors,getVisitor,updateVisitor,deleteVisitor}=require("../controllers/visitorController");
+const {createVisitor,getVisitors,getVisitor,updateVisitor,deleteVisitor,checkVisitor}=require("../controllers/visitorController");
 
 const router=express.Router();
 router.use(requireAuth);
@@ -23,5 +23,10 @@ router.delete(
     "/:id",
     requireRole("Admin"),
     deleteVisitor
+);
+router.patch(
+    "/check/:id",
+    requireRole("Admin", "Security"),
+    checkVisitor
 );
 module.exports=router;

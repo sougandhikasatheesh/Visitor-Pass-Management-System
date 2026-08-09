@@ -1,3 +1,5 @@
+const QRCode = require("qrcode");
+const CheckLog = require("../models/CheckLog");
 const sendEmail = require("../utils/sendEmail");
 const Visitor=require('../models/Visitor');
 //create visitor
@@ -21,6 +23,12 @@ const createVisitor=async(req,res)=>{
                 visitDate,
                 photo: req.file ? req.file.filename : ""
             });
+            //qr code
+
+            const qrData = `VISITOR:${visitor._id}`;
+            const qrCode = await QRCode.toDataURL(qrData);
+            visitor.qrCode = qrCode;
+            await visitor.save();
 
             //saving to mongoDB
             await visitor.save();
@@ -135,10 +143,48 @@ const createVisitor=async(req,res)=>{
     }
     }
 
+    const checkVisitor=async(req,res)=>{
+        try{
+            const visitor=await Visitor.findById(req.params.id);
+            if(!visitor){
+                return res.status(404).json({
+                    error:"Visitor not found"
+                });
+            }
+            let action="";
+            if(visitor.checkStatus==="Not Checked In"){
+                visitor.checkStatus="Checked In";
+                action="Check-In";
+            }
+            else if (visitor.checkStatus==="Checked In"){
+                visitor.checkStatus="Checked Out"
+                action="Check-Out";
+            }
+            else{
+                return res.status(400).json({
+                    error:"Visitor has already checked out"
+                });
+            }
+            await visitor.save();
+            await CheckLog.create({
+                visitor:visitor._id,
+                visitorName:visitor.visitorName,
+                action,
+                checkedBy:req.user.name
+            });
+            res.status(200).json(visitor);
+        }catch(error){
+            res.status(400).json({
+                error:error.message
+            });
+        }
+    };
+
     module.exports={
         createVisitor,
         getVisitors,
         getVisitor,
         updateVisitor,
-        deleteVisitor
+        deleteVisitor,
+        checkVisitor
     };

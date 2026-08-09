@@ -19,6 +19,9 @@ function Navbar(){
                     Visitors</Link>
                     <Link className="btn btn-outline-light me-2" to="/appointments">
                     Appointments</Link>
+                    <Link className="btn btn-outline-light me-2" to="/scanner">
+                        QR Scanner
+                    </Link>
                     <button className="btn btn-danger" onClick={handleLogout}>Logout</button>
                 </div>
 
