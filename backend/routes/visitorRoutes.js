@@ -1,6 +1,7 @@
 const requireRole = require("../middleware/requireRole");
 const upload = require("../config/multer");
 const express=require("express");
+const { validateVisitor } = require("../middleware/validationMiddleware");
 const requireAuth=require("../middleware/requireAuth");
 const {createVisitor,getVisitors,getVisitor,updateVisitor,deleteVisitor,checkVisitor}=require("../controllers/visitorController");
 
@@ -10,6 +11,7 @@ router.post(
     "/",
     requireRole("Admin", "Employee"),
     upload.single("photo"),
+    validateVisitor,
     createVisitor
 );
 router.get("/", getVisitors);
