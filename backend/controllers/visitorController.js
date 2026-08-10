@@ -1,7 +1,9 @@
-const QRCode = require("qrcode");
+
+const Visitor=require('../models/Visitor');
 const CheckLog = require("../models/CheckLog");
 const sendEmail = require("../utils/sendEmail");
-const Visitor=require('../models/Visitor');
+const QRCode = require("qrcode");
+
 //create visitor
 const createVisitor=async(req,res)=>{
     try{
@@ -14,54 +16,55 @@ const createVisitor=async(req,res)=>{
             visitDate
             } = req.body;
 
-            const visitor = new Visitor({
-                visitorName,
-                email,
-                phone,
-                purpose,
-                personToMeet,
-                visitDate,
-                photo: req.file ? req.file.filename : ""
+//create visitor object
+
+        const visitor = new Visitor({
+            visitorName,
+            email,
+            phone,
+            purpose,
+            personToMeet,
+            visitDate,
+            photo: req.file ? req.file.filename : ""
             });
+
             //qr code
 
-            const qrData = `VISITOR:${visitor._id}`;
-            const qrCode = await QRCode.toDataURL(qrData);
-            visitor.qrCode = qrCode;
-            await visitor.save();
+            const qrText = `VISITOR:${visitor._id}`;
+            visitor.qrCode = await QRCode.toDataURL(qrText);
 
             //saving to mongoDB
             await visitor.save();
 
 
-        //email
-        try{
-            await sendEmail(
-                email,
-                "Visitor Registration Confirmation",
-                `Hello ${visitorName},
+            //email
+            try{
+                await sendEmail(
+                    email,
+                    "Visitor Registration Confirmation",
+                    `Hello ${visitorName},
 
-            Your visitor registration has been completed successfully.
+                Your visitor registration has been completed successfully.
 
-            Visitor Name: ${visitorName}
-            Purpose: ${purpose}
-            Person To Meet: ${personToMeet}
-            Visit Date: ${visitDate}
-            Status: Pending
+                Visitor Name: ${visitorName}
+                Purpose: ${purpose}
+                Person To Meet: ${personToMeet}
+                Visit Date: ${visitDate}
+                Status: Pending
 
-            Thank you for using the Visitor Pass Management System.`
-            );
-        }catch(emailError){
-            console.log("Email not sent :",emailError.message);
+                Thank you for using the Visitor Pass Management System.`
+                );
+            }catch(emailError){
+                console.log("Email not sent :",emailError.message);
+            }
+            res.status(201).json(visitor);
+        }catch(error){
+            res.status(400).json({
+                message:error.message
+            })
         }
-        res.status(201).json(visitor);
-    }catch(error){
-        res.status(400).json({
-            message:error.message
-        })
-    }
-};
-        
+    };
+            
 
 //get all the visitors
 
@@ -143,6 +146,8 @@ const createVisitor=async(req,res)=>{
     }
     }
 
+//check in/check out
+
     const checkVisitor=async(req,res)=>{
         try{
             const visitor=await Visitor.findById(req.params.id);
@@ -152,12 +157,12 @@ const createVisitor=async(req,res)=>{
                 });
             }
             let action="";
-            if(visitor.checkStatus==="Not Checked In"){
-                visitor.checkStatus="Checked In";
+            if(visitor.status==="Not Checked In"){
+                visitor.status="Checked In";
                 action="Check-In";
             }
-            else if (visitor.checkStatus==="Checked In"){
-                visitor.checkStatus="Checked Out"
+            else if (visitor.status==="Checked In"){
+                visitor.status="Checked Out"
                 action="Check-Out";
             }
             else{

@@ -34,11 +34,6 @@ const visitorSchema=new mongoose.Schema(
         enum:['Pending','Approved','Rejected','Checked In','Checked Out'],
         default:'Pending'
     },
-    checkStatus:{
-        type:String,
-        enum:["Not Checked In","Checked In","Checked Out"],
-        default:"Not Checked In"
-    },
     qrCode: {
     type: String
     },
