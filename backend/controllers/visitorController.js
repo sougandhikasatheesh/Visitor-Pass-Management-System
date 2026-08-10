@@ -1,4 +1,4 @@
-
+const sendSMS=require("../utils/sendSMS");
 const Visitor=require('../models/Visitor');
 const CheckLog = require("../models/CheckLog");
 const sendEmail = require("../utils/sendEmail");
@@ -15,6 +15,11 @@ const createVisitor=async(req,res)=>{
             personToMeet,
             visitDate
             } = req.body;
+            if(!visitorName||!email||!phone||!purpose||!personToMeet||!visitDate){
+                return res.status(400).json({
+                    error:"All fields are required"
+                });
+            }
 
 //create visitor object
 
@@ -56,6 +61,14 @@ const createVisitor=async(req,res)=>{
                 );
             }catch(emailError){
                 console.log("Email not sent :",emailError.message);
+            }
+            try{
+                await sendSMS(
+                    phone,
+                    "sms_event_notifications"
+                );
+            }catch(smsError){
+                console.log("SMS not sent:",smsError.message);
             }
             res.status(201).json(visitor);
         }catch(error){

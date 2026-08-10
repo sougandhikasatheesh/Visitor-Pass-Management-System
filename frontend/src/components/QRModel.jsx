@@ -7,10 +7,11 @@ function QRModel({
         return null;
     }
     return (
-        <div className="modal d-block" tabIndex="-1" style={{backgroundColor:"rgba(0,0,0,0.5"}}> 
+        <div className="modal d-block" tabIndex="-1" style={{backgroundColor:"rgba(0,0,0,0.5)"}}> 
             <div className="modal-dialog">
+                <div className="modal-content">
                 <div className="modal-header">
-                    <h5>
+                    <h5 className="modal-title">
                         Visitor QR Code
                     </h5>
                     <button className="btn-close" onClick={()=> setSelectedVisitor(null)}></button>
@@ -40,6 +41,7 @@ function QRModel({
             </div>
             </div>
         </div>
+    </div>
     );
 }
 export default QRModel;

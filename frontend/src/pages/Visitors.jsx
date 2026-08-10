@@ -145,24 +145,60 @@ function Visitors(){
 
     //pdf
 
-    const downloadPDF = () => {
+    //loading image
+    const loadImage=(url)=>{
+        return new Promise((resolve,reject)=>{
+            const img=new Image();
+            img.crossOrigin="Anonymous";
+            img.onload=()=> resolve(img);
+            img.onerror=reject;
+            img.src=url;
+        });
+    };
+
+    const downloadPDF = async() => {
 
         if (!selectedVisitor) 
             return;
-
-        const doc = new jsPDF();
+        const doc=new jsPDF();
+        const photoUrl= `http://localhost:4000/uploads/${selectedVisitor.photo}`;
+        let visitorPhoto=null;
+        try{
+            visitorPhoto=await loadImage(photoUrl);
+        }catch(error){
+            console.log("Photo could not be loaded");
+        }
+        doc.setDrawColor(0,12,204);
+        doc.setLineWidth(1);
+        doc.rect(10,10,190,277);
+        doc.setFillColor(0,102,204);
+        doc.rect(10,10,190,20,"F");
+        doc.setTextColor(255,255,255);
         doc.setFontSize(18);
-        doc.text("Visitor Pass", 20, 20);
+        doc.setFont("helvetica","bold");
+        doc.text("VISITOR PASS",105,23,{align:"center"});
+        doc.setTextColor(0, 0, 0);
+        doc.setFont("helvetica", "normal");
+        if (visitorPhoto) {
+            doc.addImage(visitorPhoto, "JPEG", 15, 40, 40, 40);
+        }
+        if (selectedVisitor.qrCode) {
+            doc.addImage(selectedVisitor.qrCode, "PNG", 145, 40, 40, 40);
+        }
         doc.setFontSize(12);
-        doc.text(`Visitor Name: ${selectedVisitor.visitorName}`, 20, 40);
-        doc.text(`Email: ${selectedVisitor.email}`, 20, 50);
-        doc.text(`Phone: ${selectedVisitor.phone}`, 20, 60);
-        doc.text(`Purpose: ${selectedVisitor.purpose}`, 20, 70);
-        doc.text(`Person To Meet: ${selectedVisitor.personToMeet}`, 20, 80);
-        doc.text(`Visit Date: ${selectedVisitor.visitDate}`, 20, 90);
-        doc.text(`Status: ${selectedVisitor.status}`, 20, 100);
+        doc.text(`Visitor Name : ${selectedVisitor.visitorName}`, 20, 95);
+        doc.text(`Email        : ${selectedVisitor.email}`, 20, 105);
+        doc.text(`Phone        : ${selectedVisitor.phone}`, 20, 115);
+        doc.text(`Purpose      : ${selectedVisitor.purpose}`, 20, 125);
+        doc.text(`Person To Meet : ${selectedVisitor.personToMeet}`, 20, 135);
+        doc.text(
+            `Visit Date   : ${new Date(selectedVisitor.visitDate).toLocaleDateString()}`,
+            20,
+            145
+        );
+        doc.text(`Status       : ${selectedVisitor.status}`, 20, 155);
         doc.save(`${selectedVisitor.visitorName}_VisitorPass.pdf`);
-    };
+        };
 
 
 
