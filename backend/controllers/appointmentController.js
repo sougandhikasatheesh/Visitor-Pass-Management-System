@@ -1,4 +1,4 @@
-const Appointment=require("../models/Appoinment");
+const Appointment=require("../models/Appointment");
 
 //create appointment
 
@@ -19,7 +19,7 @@ const createAppointment=async(req,res)=>{
         });
         res.status(201).json(appointment);
     }catch(error){
-        res.staus(400).json({error:error.message});
+        res.status(400).json({error:error.message});
     }
 };
 
@@ -27,7 +27,7 @@ const createAppointment=async(req,res)=>{
 
 const getAppointments=async(req,res)=>{
     try{
-        const appointments=await Apppointment.find().sort({createdAt:-1});
+        const appointments=await Appointment.find().sort({createdAt:-1});
         res.status(200).json(appointments);
     }catch(error){
         res.status(400).json({error:error.message});
