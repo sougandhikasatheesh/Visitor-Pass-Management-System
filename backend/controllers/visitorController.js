@@ -77,7 +77,7 @@ const createVisitor=async(req,res)=>{
 
 const getVisitors=async(req,res)=>{
     try{
-        const visitors=(await Visitor.find()).toSorted({createdAt:-1});
+        const visitors=await Visitor.find().sort({createdAt:-1});
         res.status(200).json(visitors);
     }catch(error){
         res.status(400).json({error:error.message});

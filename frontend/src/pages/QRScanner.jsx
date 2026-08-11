@@ -1,6 +1,7 @@
 import {Html5QrcodeScanner} from "html5-qrcode";
 import { useEffect } from "react";
 import axios from "axios";
+import api from "../services/api"
 // import { checkVisitor } from "../../../backend/controllers/visitorController";
 
 function QRScanner(){
@@ -14,18 +15,26 @@ function QRScanner(){
             false
         );
         scanner.render(success,error);
+
         function success(decodedText){
             scanner.clear();
             const visitorId=decodedText.replace("VISITOR:","");
             checkVisitor(visitorId);
         }
         function error(err){
-
         }
         async function checkVisitor(id){
-            try{
                 const user=JSON.parse(localStorage.getItem("user"));
-                await axios.patch(
+                if(!user||!user.token){
+                    alert("Please login first");
+                    return ;
+                }
+                if (!id){
+                    alert("Invalid qr code");
+                    return;
+                }
+                try{
+                    const response=await axios.patch(
                     `http://localhost:4000/api/visitor/check/${id}`,
                     {},
                     {
@@ -34,12 +43,14 @@ function QRScanner(){
                         }
                     }
                 );
-                alert("Visitor checked successfully!");
-            }catch(err){
-                alert("QR Scan Failed");
+                alert(response.data.status)
+                }catch(err){
+                const message=err.response && err.response.data && err.response.data.error?err.response.data.error:"QR SCAN FAILED";
+                alert(message);
             }
+            
         }
-        return ()=> scanner.clear();
+        return ()=> scanner.clear().catch((err)=>console.log(err));
     },[]);
     return (
         <div className="container mt-5">
