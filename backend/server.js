@@ -4,8 +4,6 @@ require ("dotenv").config();
 const visitorRoutes = require("./routes/visitorRoutes");
 const appointmentRoutes = require("./routes/appointmentRoutes");
 
-
-
 const express = require("express");
 const cors = require("cors");
 const connectDB = require("./config/db");
