@@ -255,10 +255,10 @@ function Visitors(){
             visitDate={visitDate}
             setVisitDate={setVisitDate}
             status={status}
-        setStatus={setStatus}
-        setPhoto={setPhoto}
-        handleSubmit={editingId ? updateVisitor : addVisitor}
-        editing={editingId}
+            setStatus={setStatus}
+            setPhoto={setPhoto}
+            handleSubmit={editingId ? updateVisitor : addVisitor}
+            editing={editingId}
         />
         <VisitorTable
             visitors={visitors}

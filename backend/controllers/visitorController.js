@@ -3,6 +3,7 @@ const Visitor=require('../models/Visitor');
 const CheckLog = require("../models/CheckLog");
 const sendEmail = require("../utils/sendEmail");
 const QRCode = require("qrcode");
+const mongoose = require("mongoose");
 
 //create visitor
 const createVisitor=async(req,res)=>{
@@ -163,6 +164,16 @@ const createVisitor=async(req,res)=>{
 
     const checkVisitor=async(req,res)=>{
         try{
+            if(!req.params.id){
+                return res.status(400).json({
+                    error:"Visitor ID is required"
+                });
+            }
+            if(!mongoose.Types.ObjectId.isValid(req.params.id)){
+                return res.status(400).json({
+                    error:"Invalid Visitor Id"
+                });
+            }
             const visitor=await Visitor.findById(req.params.id);
             if(!visitor){
                 return res.status(404).json({

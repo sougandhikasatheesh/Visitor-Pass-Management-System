@@ -247,3 +247,25 @@ http://localhost:5173
 - Email Notifications
 - SMS Notifications
 
+## Seed Demo Data
+
+To populate the database with sample users, visitors, and appointments:
+
+```bash
+cd backend
+npm run seed
+```
+
+Demo Accounts
+
+Admin
+
+Email: admin@example.com
+
+Password: password123
+
+Employee
+
+Email: employee@example.com
+
+Password: password123

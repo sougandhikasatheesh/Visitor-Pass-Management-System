@@ -2,26 +2,24 @@ const multer=require("multer");
 const path=require("path");
 
 const storage=multer.diskStorage({
-    destination:function(req,file,cb){
-        cb(null,"uploads/");
-    },
-    filename:function(req,file,cb){
-        const uniqueName=Date.now()+path.extname(file.originalname);
-        cb(null,uniqueName);
+    destination:(req,file,cb)=> cb(null,"uploads/"),
+    filename:(req,file,cb)=>{
+        cb(null,Date.now()+path.extname(file.orginalname));
     }
 });
 
 const fileFilter=(req,file,cb)=>{
-    const allowedTypes=/jpeg|jpg|png/;
-    const isValid=allowedTypes.test(path.extname(file.originalname).toLowerCase());
-    if(isValid){
+    const allowed=["image/jpeg","image/jpg","image/png"];
+    if(allowed.includes(file.mimetype)){
         cb(null,true);
-    }
-    else{
-        cb(new Error("Only JPG,JPEG and PNG images are allowed"));
+    }else{
+        cb(new Error("Only JPG,JPEG and PNG are allowed"));
     }
 };
+
 const upload=multer({
-    storage,fileFilter
+    storage,fileFilter,limits:{
+        fileSize:2*1024*1024
+    }
 });
 module.exports=upload;
