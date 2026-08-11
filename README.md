@@ -269,3 +269,15 @@ Employee
 Email: employee@example.com
 
 Password: password123
+
+
+##Screenshots 
+
+
+<img width="1920" height="1080" alt="Screenshot (115)" src="https://github.com/user-attachments/assets/1faa31af-d8b4-4050-8c90-8d898195b242" />
+<img width="1920" height="1080" alt="Screenshot (114)" src="https://github.com/user-attachments/assets/41383791-8eef-4969-88df-6acc8208ed83" />
+<img width="1920" height="1080" alt="Screenshot (113)" src="https://github.com/user-attachments/assets/0d829e48-c77b-4ed5-94db-6739782d11da" />
+<img width="1920" height="1080" alt="Screenshot (112)" src="https://github.com/user-attachments/assets/9ca05b42-75b3-49f9-8331-5d708686949a" />
+<img width="1920" height="1080" alt="Screenshot (111)" src="https://github.com/user-attachments/assets/eca5a622-1eec-406f-88d8-2304b4afebbd" />
+<img width="1920" height="1080" alt="Screenshot (110)" src="https://github.com/user-attachments/assets/3bf9bcb6-1688-4176-96f2-a24d3100c4ff" />
+<img width="1920" height="1080" alt="Screenshot (109)" src="https://github.com/user-attachments/assets/5555c142-e986-47c5-9998-14dc7227a169" />
