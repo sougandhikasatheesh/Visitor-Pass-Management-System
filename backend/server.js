@@ -15,7 +15,7 @@ connectDB();
 // Middleware
 app.use(cors({
     origin:["http://localhost:5173",
-        "https://visitor-pass-management-system-sepia.vercel.app/"
+        "https://visitor-pass-management-system-sepia.vercel.app"
     ],
     credentials:true
 }));
