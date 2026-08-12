@@ -73,6 +73,50 @@ const createVisitor=async(req,res)=>{
     }
 };
 
+//visitor registering
+
+const selfRegisterVisitor=async(req,res)=>{
+    try{
+        const purpose=req.body.purpose;
+        const personToMeet=req.body.personToMeet;
+        const visitDate=req.body.visitDate;
+        const phone=req.body.phone;
+        if(!purpose ||!personToMeet||!visitDate||!phone){
+            return res.status(400).json({error:"All fields are required"});
+        }
+        let photoName="";
+        if(req.file){
+            photoName=req.file.filename;
+        }
+        const visitor=new Visitor({
+            userId:req.user._id,
+            visitorName:req.user.name,
+            email:req.user.email,
+            phone:phone,
+            purpose:purpose,
+            personToMeet:personToMeet,
+            visitDate:visitDate,
+            photo:photoName
+        });
+        const qrText="VISITOR:"+visitor._id;
+        visitor.qrCode=await QRCode.toDataURL(qrText);
+        await visitor.save();
+        res.status(201).json(visitor);
+    }catch(error){
+        res.status(400).json({message:error.message});
+    }
+};
+
+//get vistors data to vistor
+const getMyVisits=async(req,res)=>{
+    try{
+        const myVisits=await Visitor.find({userId:req.user._id}).sort({createdAt:-1});
+        res.status(200).json(myVisits);
+    }catch(error){
+        res.status(400).json({error:error.message});
+    }
+}
+
 //get all visitors
 
 const getVisitors=async(req,res)=>{
@@ -136,7 +180,7 @@ const deleteVisitor=async(req,res)=>{
 const checkVisitor=async(req,res)=>{
     try{
         const visitorId=req.params.id;
-        if(!visitor){
+        if(!visitorId){
             return res.status(400).json({error:"Visitor id is required"});
         }
         if(!mongoose.Types.ObjectId.isValid(visitorId)){
@@ -151,7 +195,7 @@ const checkVisitor=async(req,res)=>{
             visitor.status="Checked In";
             action="Check-In";
         }else if(visitor.status==="Checked In"){
-            visitor.status="Checkout Out";
+            visitor.status="Checked Out";
             action="Check-Out";
         }else{
             return res.status(400).json({error:"Visitor has already checked out"});
@@ -177,6 +221,8 @@ module.exports={
     getVisitor,
     updateVisitor,
     deleteVisitor,
-    checkVisitor
+    checkVisitor,
+    selfRegisterVisitor,
+    getMyVisits
 };
 
