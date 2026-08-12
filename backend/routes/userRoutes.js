@@ -18,6 +18,6 @@ const router=express.Router();
 //signup route
 router.post("/signup",signupUser);
 //login route
-router.post("/login",loginUser);
+router.post("/login",loginLimiter,loginUser);
 
 module.exports=router;

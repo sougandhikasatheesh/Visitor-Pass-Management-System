@@ -7,7 +7,7 @@ function MyVisits(){
     const [visits,setVisits]=useState([]);
     const user=JSON.parse(localStorage.getItem("user"));
     useEffect(()=>{
-        fetchVisists();
+        fetchVisits();
     },[]);
     const fetchVisits=async()=>{
         try{
