@@ -5,6 +5,9 @@ import Signup from "./pages/Signup";
 import Dashboard from "./pages/Dashboard";
 import Visitors from "./pages/Visitors";
 import Appointments from "./pages/Appointments";
+import VisitorDashboard from "./pages/VisitorDashboard";
+import SelfRegister from "./pages/SelfRegister";
+import MyVisits from "./pages/MyVisits";
 
 
 function App() {
@@ -17,6 +20,9 @@ function App() {
         <Route path="/visitors" element={<Visitors />} />
         <Route path="/appointments" element={<Appointments />} />
         <Route path="/scanner" element={<QRScanner />} /> 
+        <Route path="/visitor-dashboard" element={<VisitorDashboard />} />
+        <Route path="/self-register" element={<SelfRegister />} />
+        <Route path="/my-visits" element={<MyVisits />} />
       </Routes>
       
     </BrowserRouter>

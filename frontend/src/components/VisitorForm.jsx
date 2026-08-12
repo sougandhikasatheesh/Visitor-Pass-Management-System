@@ -1,5 +1,6 @@
 import React from "react";
 function VisitorForm({
+    isSelfRegister=false,
     visitorName,
     setVisitorName,
     email,
@@ -26,6 +27,7 @@ function VisitorForm({
             <div className="card-body">
                 <form onSubmit={handleSubmit}>
                     <div className="row">
+                        {!isSelfRegister &&(
                         <div className="col-md-6 mb-3">
                             <label className="form-label">
                                 Visitor Name
@@ -40,6 +42,8 @@ function VisitorForm({
                                 required
                             />
                         </div>
+                        )}
+                        {!isSelfRegister &&(
                         <div className="col-md-6 mb-3">
                             <label className="form-label">Email</label>
                             <input 
@@ -52,6 +56,7 @@ function VisitorForm({
                                 required
                             />
                         </div>
+                        )}
                         <div className="col-md-6 mb-3">
                             <label className="form-label">Phone</label>
                             <input 
@@ -100,6 +105,7 @@ function VisitorForm({
                                 required
                             />
                         </div>
+                        {!isSelfRegister &&(
                         <div className="col-md-6 mb-3">
                             <label className="form-label">Status</label>
                             <select 
@@ -114,6 +120,7 @@ function VisitorForm({
                                 <option value="Rejected">Rejected</option>
                             </select>
                         </div>
+                        )}
                         <div className="col-md-6 mb-3">
                             <label className="form-label">Photo</label>
                             <input 

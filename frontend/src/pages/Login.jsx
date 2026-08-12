@@ -16,9 +16,14 @@ function Login() {
     const handleSubmit = async (e)=>{
         e.preventDefault();
         await login(email,password);
-        const user=localStorage.getItem("user");
+        const user = JSON.parse(localStorage.getItem("user"));
         if(user){
-            navigate("/dashboard")
+            if(user.role==="admin"||user.role==="employee"||user.role==="security"){
+                navigate("/dashboard");
+            }else if(user.role==="visitor"){
+                navigate("/visitor-dashboard")
+            }
+            
         }
     };
     return (

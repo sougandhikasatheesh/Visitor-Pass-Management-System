@@ -172,7 +172,7 @@ function Visitors(){
         if (!selectedVisitor) 
             return;
         const doc=new jsPDF();
-        const photoUrl= `http://localhost:4000/uploads/${selectedVisitor.photo}`;
+        const photoUrl= `${import.meta.env.VITE_UPLOAD_URL}/${selectedVisitor.photo}`;
         let visitorPhoto=null;
         try{
             visitorPhoto=await loadImage(photoUrl);
