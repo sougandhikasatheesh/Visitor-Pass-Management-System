@@ -14,7 +14,9 @@ connectDB();
 
 // Middleware
 app.use(cors({
-    origin:"http://localhost:5173",
+    origin:["http://localhost:5173",
+        "https://visitor-pass-management-system-wlfz.onrender.com"
+    ],
     credentials:true
 }));
 app.use(express.json());
