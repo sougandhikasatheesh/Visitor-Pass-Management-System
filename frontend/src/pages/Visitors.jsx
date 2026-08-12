@@ -1,4 +1,3 @@
-
 import jsPDF from "jspdf";
 import {saveAs} from "file-saver";
 import {useEffect,useState} from "react";
@@ -9,6 +8,8 @@ import QRModel from "../components/QRModel";
 import api from "../services/api";
 
 function Visitors(){
+    //state variable
+
     const [visitors,setVisitors]=useState([]);
     const [visitorName, setVisitorName] = useState("");
     const [email, setEmail] = useState("");
@@ -23,8 +24,11 @@ function Visitors(){
     const [filterStatus, setFilterStatus] = useState("All");
     const [photo, setPhoto] = useState(null);
 
+    //get user 
     const user=JSON.parse(localStorage.getItem("user"));
 
+
+    //fetch visitor from backend
     const fetchVisitors=async()=>{
         try{
             const response=await api.get("/visitor",{
@@ -47,6 +51,7 @@ function Visitors(){
         setStatus("Pending");
         setPhoto(null);
     };
+
     //add visitor
     const addVisitor = async (e) => {
         e.preventDefault();
@@ -81,6 +86,7 @@ function Visitors(){
                 console.log(error);
             }
         };
+
     //update visitor
     const updateVisitor=async(e)=>{
         e.preventDefault();
@@ -97,6 +103,8 @@ function Visitors(){
             console.log(error);        
         }
     }
+
+
     //delete visitor 
 
     const deleteVisitor=async(id)=>{
@@ -112,6 +120,8 @@ function Visitors(){
         }
     };
 
+    //editing vistor details
+
     const editVisitor=(visitor)=>{
         setEditingId(visitor._id);
         setVisitorName(visitor.visitorName);
@@ -123,6 +133,7 @@ function Visitors(){
         setStatus(visitor.status);
     };
     
+
     //update visitor status
     const updateVisitorStatus=async(visitor)=>{
         let newStatus;
@@ -144,7 +155,6 @@ function Visitors(){
     };
 
     //pdf
-
     //loading image
     const loadImage=(url)=>{
         return new Promise((resolve,reject)=>{
@@ -156,6 +166,7 @@ function Visitors(){
         });
     };
 
+    //export pdf 
     const downloadPDF = async() => {
 
         if (!selectedVisitor) 
@@ -179,10 +190,10 @@ function Visitors(){
         doc.text("VISITOR PASS",105,23,{align:"center"});
         doc.setTextColor(0, 0, 0);
         doc.setFont("helvetica", "normal");
-        if (visitorPhoto) {
+        if (visitorPhoto) { //visitor photo
             doc.addImage(visitorPhoto, "JPEG", 15, 40, 40, 40);
         }
-        if (selectedVisitor.qrCode) {
+        if (selectedVisitor.qrCode) { //visitor qrcode
             doc.addImage(selectedVisitor.qrCode, "PNG", 145, 40, 40, 40);
         }
         doc.setFontSize(12);
@@ -241,6 +252,8 @@ function Visitors(){
         <Navbar />
         <div className="container mt-4">
             <h2>Visitors</h2>
+
+        {/* visitor form */}
         <VisitorForm
             visitorName={visitorName}
             setVisitorName={setVisitorName}
@@ -260,6 +273,9 @@ function Visitors(){
             handleSubmit={editingId ? updateVisitor : addVisitor}
             editing={editingId}
         />
+
+        {/* visitor table view */}
+
         <VisitorTable
             visitors={visitors}
             user={user}
@@ -274,6 +290,9 @@ function Visitors(){
             updateVisitorStatus={updateVisitorStatus}
         />
         </div>
+
+        {/* qrcdoe model */}
+        
         <QRModel
             selectedVisitor={selectedVisitor}
             setSelectedVisitor={setSelectedVisitor}

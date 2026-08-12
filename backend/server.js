@@ -1,4 +1,3 @@
-
 const path = require("path");
 require ("dotenv").config();
 const visitorRoutes = require("./routes/visitorRoutes");
@@ -12,6 +11,8 @@ const userRoutes= require("./routes/userRoutes");
 const app = express();
 connectDB();
 
+
+
 // Middleware
 app.use(cors({
     origin:["http://localhost:5173",
@@ -20,6 +21,7 @@ app.use(cors({
     credentials:true
 }));
 app.use(express.json());
+
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use("/api/user",userRoutes);
 app.use("/api/visitor", visitorRoutes);
