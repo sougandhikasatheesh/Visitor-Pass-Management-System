@@ -18,9 +18,9 @@ function Login() {
         await login(email,password);
         const user = JSON.parse(localStorage.getItem("user"));
         if(user){
-            if(user.role==="admin"||user.role==="employee"||user.role==="security"){
+            if(user.role==="Admin"||user.role==="Employee"||user.role==="Security"){
                 navigate("/dashboard");
-            }else if(user.role==="visitor"){
+            }else if(user.role==="Visitor"){
                 navigate("/visitor-dashboard")
             }
             
